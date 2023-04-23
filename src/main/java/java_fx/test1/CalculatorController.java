@@ -35,6 +35,15 @@ public class CalculatorController {
 
     @FXML
     private Label tip;
+
+    @FXML
+    private TextField OnePayInput;
+
+    @FXML
+    private TextField PeopleAmountInput;
+
+
+
     public void initialize(){
        currency.setRoundingMode(RoundingMode.HALF_UP);
 
@@ -51,11 +60,25 @@ public class CalculatorController {
     public void calculateButtonPressed (ActionEvent event){
         try {
             BigDecimal amount = new BigDecimal(AmountInput.getText());
-            BigDecimal tip = amount.multiply(tipPercentage);
-            BigDecimal total = amount.add(tip);
+            try{
+                BigDecimal peopleAmount = new BigDecimal(PeopleAmountInput.getText());
+                BigDecimal tip = amount.multiply(tipPercentage);
+                BigDecimal total = amount.add(tip);
 
-            TipInput.setText(currency.format(tip));
-            TotalInput.setText(currency.format(total));
+                TipInput.setText(currency.format(tip));
+                TotalInput.setText(currency.format(total));
+                try{
+                        BigDecimal onePay = total.divide(peopleAmount);
+                    }catch (Exception e){
+                        PeopleAmountInput.setText("Could not divide by 0;");
+                        PeopleAmountInput.selectAll();
+                    }
+                OnePayInput.setText(currency.format(total.divide(peopleAmount)));
+            }catch (NumberFormatException ex) {
+                PeopleAmountInput.setText("Enter amount");
+                PeopleAmountInput.selectAll();
+            }
+
         }catch (NumberFormatException ex){
             AmountInput.setText("Enter amount");
             AmountInput.selectAll();
