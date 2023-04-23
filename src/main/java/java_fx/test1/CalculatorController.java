@@ -68,12 +68,12 @@ public class CalculatorController {
                 TipInput.setText(currency.format(tip));
                 TotalInput.setText(currency.format(total));
                 try{
-                        BigDecimal onePay = total.divide(peopleAmount);
-                    }catch (Exception e){
-                        PeopleAmountInput.setText("Could not divide by 0;");
-                        PeopleAmountInput.selectAll();
-                    }
-                OnePayInput.setText(currency.format(total.divide(peopleAmount)));
+                    BigDecimal onePay = total.divide(peopleAmount);
+                    OnePayInput.setText(currency.format(onePay));
+                }catch (Exception e){
+                    PeopleAmountInput.setText("Could not divide by 0;");
+                    PeopleAmountInput.selectAll();
+                }
             }catch (NumberFormatException ex) {
                 PeopleAmountInput.setText("Enter amount");
                 PeopleAmountInput.selectAll();
