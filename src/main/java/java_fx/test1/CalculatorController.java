@@ -3,6 +3,7 @@ package java_fx.test1;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,8 +22,6 @@ public class CalculatorController {
     @FXML
     private TextField AmountInput;
 
-    @FXML
-    private Button Calculatebutton;
 
     @FXML
     private TextField TipInput;
@@ -36,13 +35,6 @@ public class CalculatorController {
     @FXML
     private Label tip;
 
-    @FXML
-    private TextField OnePayInput;
-
-    @FXML
-    private TextField PeopleAmountInput;
-
-
 
     public void initialize(){
        currency.setRoundingMode(RoundingMode.HALF_UP);
@@ -53,31 +45,29 @@ public class CalculatorController {
                    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                        tipPercentage = BigDecimal.valueOf(newValue.intValue()/100.0);
                        tip.setText(percent.format(tipPercentage));
+                       calculateButtonPressed();
+                   }
+               }
+       );
+       AmountInput.textProperty().addListener(
+               new ChangeListener<String>() {
+                   @Override
+                   public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                      calculateButtonPressed();
                    }
                }
        );
     }
-    public void calculateButtonPressed (ActionEvent event){
+    public void calculateButtonPressed (){
         try {
             BigDecimal amount = new BigDecimal(AmountInput.getText());
-            try{
-                BigDecimal peopleAmount = new BigDecimal(PeopleAmountInput.getText());
                 BigDecimal tip = amount.multiply(tipPercentage);
                 BigDecimal total = amount.add(tip);
 
                 TipInput.setText(currency.format(tip));
                 TotalInput.setText(currency.format(total));
-                try{
-                    BigDecimal onePay = total.divide(peopleAmount);
-                    OnePayInput.setText(currency.format(onePay));
-                }catch (Exception e){
-                    PeopleAmountInput.setText("Could not divide by 0;");
-                    PeopleAmountInput.selectAll();
-                }
-            }catch (NumberFormatException ex) {
-                PeopleAmountInput.setText("Enter amount");
-                PeopleAmountInput.selectAll();
-            }
+
+
 
         }catch (NumberFormatException ex){
             AmountInput.setText("Enter amount");
